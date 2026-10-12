@@ -1,0 +1,7 @@
+{
+    "test_accuracy": 0.9969040155410767,
+    "test_loss": 0.028919517993927002,
+    "target_accuracy": 0.97,
+    "target_met": true,
+    "test_images": 646
+}
