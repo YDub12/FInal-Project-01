@@ -1,47 +1,14 @@
-# ![CI logo](https://codeinstitute.s3.amazonaws.com/fullstack/ci_logo_small.png)
+***Cherry Leaf Powdery Mildew Detector***
 
-## Template Instructions
+Project Overview
 
-Welcome,
+This project develops a machine-learning image classifier to identify powdery mildew on cherry leaves.
 
-This is the Code Institute student template for the Cherry Leaves project option in Predictive Analytics. We have preinstalled all of the tools you need to get started. It's perfectly okay to use this template as the basis for your project submissions. Click the `Use this template` button above to get started.
+Using a Convolutional Neural Network (CNN), the model predicts whether a cherry leaf is healthy or affected by powdery mildew.
 
-You can safely delete the Template Instructions section of this README.md file and modify the remaining paragraphs for your own project. Please do read the Template Instructions at least once, though! It contains some important information about the IDE and the extensions we use.
+The project is designed to support the early identification of potential leaf disease through image analysis. A Streamlit dashboard is planned to allow users to explore the dataset, review model performance, and upload images for classification.
 
-## How to use this repo
-
-1. Use this template to create your GitHub project repo
-
-1. In your newly created repo click on the green Code button. 
-
-1. Then, from the Codespaces tab, click Create codespace on main.
-
-1. Wait for the workspace to open. This can take a few minutes.
-
-1. Open a new terminal and `pip3 install -r requirements.txt`
-
-1. Open the jupyter_notebooks directory, and click on the notebook you want to open.
-
-1. Click the kernel button and choose Python Environments.
-
-Note that the kernel says Python 3.12.1 as it inherits from the workspace, so it will be Python-3.12.1 as installed by Codespaces. To confirm this, you can use `! python --version` in a notebook code cell.
-
-## Cloud IDE Reminders
-
-To log into the Heroku toolbelt CLI:
-
-1. Log in to your Heroku account and go to _Account Settings_ in the menu under your avatar.
-2. Scroll down to the _API Key_ and click _Reveal_
-3. Copy the key
-4. In the terminal, run `heroku_config`
-5. Paste in your API key when asked
-
-You can now use the `heroku` CLI program - try running `heroku apps` to confirm it works. This API key is unique and private to you, so do not share it. If you accidentally make it public, then you can create a new one with _Regenerate API Key_.
-
-## Dataset Content
-
-- The dataset is sourced from [Kaggle](https://www.kaggle.com/codeinstitute/cherry-leaves). We then created a fictitious user story where predictive analytics can be applied in a real project in the workplace.
-- The dataset contains +4 thousand images taken from the client's crop fields. The images show healthy cherry leaves and cherry leaves that have powdery mildew, a fungal disease that affects many plant species. The cherry plantation crop is one of the finest products in their portfolio, and the company is concerned about supplying the market with a compromised quality product.
+Project status: Machine-learning development and evaluation completed. Streamlit dashboard and deployment are in development.
 
 ## Business Requirements
 
@@ -54,24 +21,423 @@ To save time in this process, the IT team suggested an ML system that detects in
 
 ## Hypothesis and how to validate?
 
-- List here your project hypothesis(es) and how you envision validating it (them).
+Hypothesis 1: Healthy cherry leaves and leaves affected by powdery mildew exhibit distinguishable visual characteristics, particularly in colour and surface texture.
 
-## The rationale to map the business requirements to the Data Visualisations and ML tasks
+Hypothesis 2: A CNN trained on labelled cherry-leaf images can achieve at least 97% classification accuracy on a held-out test dataset.
 
-- List your business requirements and a rationale to map them to the Data Visualisations and ML tasks.
+Machine-Learning Workflow
 
-## ML Business Case
+1. Data Collection
 
-- In the previous bullet, you potentially visualised an ML task to answer a business requirement. You should frame the business case using the method we covered in the course.
+Notebook: 01 data_collection.ipynb
 
-## Dashboard Design
+Downloaded the dataset from Kaggle.
 
-- List all dashboard pages and their content, either blocks of information or widgets, like buttons, checkboxes, images, or any other items, that your dashboard library supports.
-- Finally, during the project development, you may revisit your dashboard plan to update a given feature (for example, at the beginning of the project, you were confident you would use a given plot to display an insight, but later, you chose another plot type).
+Verified the two image categories.
 
-## Unfixed Bugs
+Confirmed 4,208 images in total.
 
-- You will need to mention unfixed bugs and why they were unfixed. This section should include shortcomings of the frameworks or technologies used. Although time can be a significant variable for consideration, paucity of time and difficulty understanding implementation is not a valid reason to leave bugs unfixed.
+Confirmed that the images are 256 × 256 pixels.
+
+2. Data Visualisation
+
+Notebook: 02_data_visualisation.ipynb
+
+Displayed random image samples and image montages.
+
+Generated average images for each class.
+
+Generated pixel-variability images.
+
+Compared average healthy and powdery mildew images.
+
+Saved visual-study outputs for future dashboard integration.
+
+3. Data Preparation
+
+Notebook: 03_data_cleaning.ipynb
+
+Checked all 4,208 images for corruption.
+
+Identified 1,847 source-image groups using filename information.
+
+Kept known augmented versions of each source photograph within the same dataset split.
+
+Created training, validation and test datasets.
+
+Recorded the split assignments in a manifest.
+
+Dataset Split
+
+Dataset
+
+Healthy
+
+Powdery mildew
+
+Total
+
+Training
+
+1,464
+
+1,472
+
+2,936
+
+Validation
+
+310
+
+316
+
+626
+
+Testing
+
+330
+
+316
+
+646
+
+Total
+
+2,104
+
+2,104
+
+4,208
+
+The split was approximately 70% training, 15% validation and 15% testing by image count.
+
+4. Model Training
+
+Notebook: 04_model_training.ipynb
+
+A CNN was built using TensorFlow and Keras.
+
+The model includes:
+
+Image resizing to 100 × 100 pixels.
+
+Pixel-value normalisation.
+
+Convolutional layers for feature extraction.
+
+Max-pooling layers for dimensionality reduction.
+
+Dense layers for classification.
+
+Dropout to reduce overfitting.
+
+A sigmoid output for binary classification.
+
+The model was trained using:
+
+Adam optimiser.
+
+Binary crossentropy loss.
+
+Accuracy as a performance metric.
+
+Early stopping based on validation loss.
+
+Training ended after eight epochs, with the best validation-loss weights restored.
+
+The trained model was saved as:
+
+outputs/models/cherry_leaf_cnn.keras
+
+5. Model Evaluation
+
+Notebook: 05_model_evaluation.ipynb
+
+The model was evaluated using the 646-image held-out test dataset, which was not used during training or validation.
+
+Test Performance
+
+Metric
+
+Result
+
+Accuracy
+
+99.69%
+
+Loss
+
+0.0289
+
+Correct classifications
+
+644
+
+Incorrect classifications
+
+2
+
+Healthy precision
+
+99.40%
+
+Healthy recall
+
+100.00%
+
+Healthy F1-score
+
+99.70%
+
+Powdery mildew precision
+
+100.00%
+
+Powdery mildew recall
+
+99.37%
+
+Powdery mildew F1-score
+
+99.68%
+
+Confusion Matrix
+
+Actual class
+
+Predicted healthy
+
+Predicted powdery mildew
+
+Healthy
+
+330
+
+0
+
+Powdery mildew
+
+2
+
+314
+
+The model correctly classified all 330 healthy images and 314 of the 316 powdery mildew images.
+
+The two errors were false negatives: diseased leaves incorrectly classified as healthy.
+
+This is an important limitation because a missed disease prediction could delay appropriate action.
+
+Accuracy Target
+
+The model achieved 99.69% accuracy on the held-out test dataset, exceeding the client's 97% target by 2.69 percentage points.
+
+This result applies to the available test dataset and does not guarantee equivalent performance on new photographs collected under different conditions.
+
+Data Leakage Checks
+
+The dataset contains augmented images, making careful splitting important.
+
+To reduce the risk of data leakage:
+
+Images were grouped using identifiers derived from their source filenames.
+
+Known rotated and flipped versions were assigned to the same dataset split.
+
+No source-image groups overlapped across training, validation and testing.
+
+SHA-256 hashing identified 4,208 unique image files.
+
+No byte-for-byte duplicate files were found across dataset splits.
+
+These checks reduce leakage risk but do not rule out visually equivalent images stored with different transformations or compression.
+
+Technologies Used
+
+Python
+
+Jupyter Notebook
+
+NumPy
+
+Pandas
+
+Matplotlib
+
+Seaborn
+
+Pillow
+
+Scikit-learn
+
+TensorFlow / Keras
+
+Streamlit (planned dashboard)
+
+Git and GitHub
+
+GitHub Codespaces
+
+Heroku (planned deployment)
+
+Repository Structure
+
+.
+├── jupyter_notebooks/
+│   ├── 01 data_collection.ipynb
+│   ├── 02_data_visualisation.ipynb
+│   ├── 03_data_cleaning.ipynb
+│   ├── 04_model_training.ipynb
+│   └── 05_model_evaluation.ipynb
+├── outputs/
+│   ├── visual_study/
+│   ├── models/
+│   │   ├── cherry_leaf_cnn.keras
+│   │   └── training_history.csv
+│   └── evaluation/
+│       ├── test_metrics.json
+│       ├── classification_report.csv
+│       └── confusion_matrix.csv
+├── data/
+│   ├── raw/
+│   └── processed/
+├── requirements.txt
+├── Procfile
+├── setup.sh
+├── .slugignore
+└── README.md
+
+The data/ folders contain local working datasets and are excluded from version control.
+
+Running the Project Locally
+
+The project was developed using Python in GitHub Codespaces.
+
+Create and activate a virtual environment, then install the required packages:
+
+python -m venv .venv
+source .venv/bin/activate
+python -m pip install -r requirements.txt
+
+Run the Jupyter notebooks in numerical order.
+
+To reproduce the data collection process, obtain access to the Kaggle dataset and configure Kaggle credentials securely. Do not commit credentials or original client images.
+
+Dashboard startup instructions will be added once the Streamlit application has been implemented.
+
+Deployment
+
+Status: Not yet deployed.
+
+The intended deployment platform is Heroku.
+
+Before deployment, the project will require:
+
+A completed Streamlit dashboard.
+
+Verification of the application startup configuration.
+
+Confirmation that the trained model can be loaded in the deployed environment.
+
+Dependency and file-size checks.
+
+End-to-end testing of uploaded-image predictions.
+
+The live application URL will be added after deployment.
+
+Known Limitations
+
+Evaluation was performed using images from the provided dataset.
+
+The dataset contains augmented images, which can make generalisation assessment more challenging.
+
+Exact-file hashing does not detect all visually duplicated or transformed photographs.
+
+Two diseased leaves were incorrectly classified as healthy.
+
+Model probability outputs have not been independently calibrated.
+
+Performance on photographs from different cameras, lighting conditions or environments has not yet been established.
+
+The Streamlit dashboard and deployment are still in development.
+
+Future Improvements
+
+Test the model using independently collected cherry-leaf photographs.
+
+Investigate the two false-negative predictions.
+
+Assess probability calibration and classification thresholds.
+
+Compare the CNN with transfer-learning approaches.
+
+Complete the Streamlit dashboard.
+
+Deploy and test the application on Heroku.
+
+Acknowledgements
+
+Code Institute for the project dataset and educational framework.
+
+Kaggle for dataset distribution.
+
+TensorFlow, Keras, Scikit-learn and Streamlit for the tools used in the project.
+
+## Bugs
+Bugs, Issues and Resolutions
+
+Several technical challenges were encountered during the development of this project. These issues provided opportunities to improve the code, understand the development environment and make the machine-learning workflow more reliable.
+
+1. Python Virtual Environment and Package Installation
+
+Issue: Package installation initially failed in GitHub Codespaces because the environment had the PIP_USER variable set to yes, which conflicted with installing packages inside the project's virtual environment.
+
+Resolution: The environment variable was unset using unset PIP_USER, and the virtual environment was activated before installing the dependencies. The correct Python interpreter was also selected as the Jupyter notebook kernel.
+
+2. Kaggle Dataset Authentication and File Paths
+
+Issue: Downloading and accessing the Kaggle dataset required additional configuration. The extracted dataset also contained an extra nested directory, which initially complicated locating the image folders.
+
+Resolution: The Kaggle API credentials were moved to the user's private .kaggle directory with restricted file permissions. The dataset directory structure was inspected, and the notebook paths were updated to reference the correct folders.
+
+3. Image File Extension Differences
+
+Issue: The dataset contained images using uppercase .JPG extensions. Initial file-filtering logic could miss these images when checking only lowercase extensions.
+
+Resolution: File extensions were normalised using .suffix.lower() before checking supported image formats. This ensured all 4,208 images were included.
+
+4. Jupyter Notebook Syntax and Working Directory Issues
+
+Issue: A notebook template contained an incomplete try block, causing an IndentationError. There was also a risk of incorrect file paths when changing the working directory between the notebook folder and the project root.
+
+Resolution: The invalid code block was replaced with valid folder-creation logic, and the working directory was checked before running file operations.
+
+5. Kernel Crashing During Image Analysis
+
+Issue: The Jupyter kernel crashed when calculating average and variability images because the original approach loaded large numbers of full-resolution images into memory simultaneously.
+
+Resolution: The calculation was rewritten to process images one at a time using an incremental mean and variance algorithm. This substantially reduced memory usage and allowed the visual analysis to complete successfully.
+
+6. Dataset Splitting and Augmented Images
+
+Issue: The dataset contained rotated and flipped versions of source photographs. A conventional random image split could place related images in both training and testing datasets, creating a risk of data leakage. An initial attempt at constructing the split lists also produced zero group counts due to notebook execution or indentation issues.
+
+Resolution: Images were grouped by identifiers derived from their filenames, and the groups were split rather than individual images. The corrected process assigned all 1,847 source-image groups to training, validation or testing, with no group overlap. A subsequent SHA-256 check found no exact duplicate files across splits.
+
+7. TensorFlow Warnings During Training and Evaluation
+
+Issue: TensorFlow displayed a warning about the shuffle parameter during training and an OUT_OF_RANGE: End of sequence message during evaluation.
+
+Resolution: The warnings were reviewed. Training data was already shuffled when the dataset was created, and evaluation completed successfully despite the end-of-sequence message. No changes were required.
+
+8. Saved Model Not Displaying in VS Code
+
+Issue: VS Code reported that the saved Keras model was too large to display in the text editor.
+
+Resolution: The .keras file was recognised as a binary model artifact rather than a text file. The model was saved successfully, and TensorFlow's model-loading functionality was used to verify that it could be opened programmatically.
+
+Lessons Learned
+
+These challenges reinforced the importance of checking environment configuration, validating file paths, managing memory efficiently, preventing data leakage and verifying saved model artifacts. They also highlighted the value of testing each stage of a machine-learning pipeline before moving on to the next.
 
 ## Deployment
 
