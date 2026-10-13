@@ -1,8 +1,13 @@
-import streamlit as st
 from pathlib import Path
+
+import json
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+import streamlit as st
 import tensorflow as tf
+
 from PIL import Image
 
 @st.cache_resource
@@ -398,4 +403,119 @@ elif page == "Project Hypothesis":
 
 elif page == "Model Performance":
     st.header("Model Performance")
-    st.info("Model evaluation results will be added here.")
+
+    st.markdown("""
+    This page presents the performance of the trained
+    Convolutional Neural Network (CNN) on the held-out
+    test dataset.
+
+    The model was evaluated using 646 images that were
+    not used during training or validation.
+    """)
+
+    evaluation_path = Path("outputs/evaluation")
+
+    # Load saved evaluation results
+    with open(evaluation_path / "test_metrics.json") as file:
+        metrics = json.load(file)
+
+    classification_df = pd.read_csv(
+        evaluation_path / "classification_report.csv",
+        index_col=0
+    )
+
+    confusion_df = pd.read_csv(
+        evaluation_path / "confusion_matrix.csv",
+        index_col=0
+    )
+
+    # Display key performance metrics
+    st.subheader("Test Results")
+
+    col1, col2, col3 = st.columns(3)
+
+    with col1:
+        st.metric(
+            label="Test Accuracy",
+            value=f"{metrics['test_accuracy']:.2%}"
+        )
+
+    with col2:
+        st.metric(
+            label="Test Loss",
+            value=f"{metrics['test_loss']:.4f}"
+        )
+
+    with col3:
+        st.metric(
+            label="Accuracy Target",
+            value=f"{metrics['target_accuracy']:.0%}"
+        )
+
+    if metrics["target_met"]:
+        st.success(
+            "The model meets the client's 97% accuracy target."
+        )
+    else:
+        st.warning(
+            "The model does not yet meet the 97% accuracy target."
+        )
+
+    # Confusion matrix
+    st.subheader("Confusion Matrix")
+
+    fig, ax = plt.subplots(figsize=(7, 5))
+
+    sns.heatmap(
+        confusion_df,
+        annot=True,
+        fmt="d",
+        cmap="Blues",
+        ax=ax
+    )
+
+    ax.set_title("Cherry Leaf CNN — Confusion Matrix")
+    ax.set_xlabel("Predicted Class")
+    ax.set_ylabel("Actual Class")
+
+    plt.tight_layout()
+    st.pyplot(fig)
+    plt.close(fig)
+
+    st.markdown("""
+    **Interpretation:**
+
+    - 330 healthy leaves were correctly classified.
+    - 314 powdery mildew leaves were correctly classified.
+    - Two powdery mildew leaves were incorrectly classified
+      as healthy.
+    - No healthy leaves were incorrectly classified as
+      powdery mildew.
+
+    The two false-negative predictions are important because
+    they represent diseased leaves that the model failed to
+    identify.
+    """)
+
+    # Classification report
+    st.subheader("Classification Report")
+
+    st.dataframe(
+        classification_df,
+        use_container_width=True
+    )
+
+    st.markdown("""
+    **Understanding the metrics:**
+
+    - **Precision:** How often predictions of a class are correct.
+    - **Recall:** How many actual examples of a class are detected.
+    - **F1-score:** A combined measure of precision and recall.
+    - **Support:** The number of images belonging to each class.
+    """)
+
+    st.info(
+        "The model achieved 99.69% accuracy on the provided "
+        "test dataset. Performance on independently collected "
+        "images has not yet been established."
+    )
