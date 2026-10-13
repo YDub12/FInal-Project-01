@@ -1,4 +1,5 @@
 import streamlit as st
+from pathlib import Path
 
 st.set_page_config(
     page_title="Cherry Leaf Disease Detector",
@@ -96,7 +97,93 @@ if page == "Project Summary":
 
 elif page == "Visual Study":
     st.header("Visual Study")
-    st.info("Visual study charts and images will be added here.")
+
+    st.markdown("""
+    This page explores the visual differences between healthy
+    cherry leaves and leaves affected by powdery mildew.
+
+    Powdery mildew commonly appears as white, powder-like
+    patches on the leaf surface.
+
+    The images below were generated during the exploratory
+    data analysis in Notebook 02.
+    """)
+
+    visual_path = Path("outputs/visual_study")
+
+    st.subheader("Average Leaf Images")
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+        st.image(
+            str(visual_path / "healthy_average.png"),
+            caption="Average Healthy Leaf",
+            use_container_width=True
+        )
+
+    with col2:
+        st.image(
+            str(visual_path / "mildew_average.png"),
+            caption="Average Powdery Mildew Leaf",
+            use_container_width=True
+        )
+
+    st.markdown("""
+    **Interpretation:**
+
+    These images represent the average pixel values across
+    all images in each category.
+
+    They help illustrate differences in overall colour and
+    appearance between healthy and infected leaves.
+    """)
+
+    st.subheader("Leaf Image Variability")
+
+    col3, col4 = st.columns(2)
+
+    with col3:
+        st.image(
+            str(visual_path / "healthy_variability.png"),
+            caption="Healthy Leaf Variability",
+            use_container_width=True
+        )
+
+    with col4:
+        st.image(
+            str(visual_path / "mildew_variability.png"),
+            caption="Powdery Mildew Variability",
+            use_container_width=True
+        )
+
+    st.markdown("""
+    **Interpretation:**
+
+    Variability images show how much pixel values differ
+    across images within the same category.
+
+    Brighter areas indicate greater variation in pixel values.
+    """)
+
+    st.subheader("Difference Between Average Images")
+
+    st.image(
+        str(visual_path / "average_difference.png"),
+        caption="Absolute Difference Between Class Averages",
+        use_container_width=True
+    )
+
+    st.markdown("""
+    **Interpretation:**
+
+    The difference image highlights areas where the average
+    pixel values differ between healthy and powdery mildew
+    leaves.
+
+    These visual differences support the hypothesis that
+    the two classes have distinguishable characteristics.
+    """)
 
 elif page == "Disease Prediction":
     st.header("Disease Prediction")
