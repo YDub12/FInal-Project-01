@@ -1,5 +1,14 @@
 import streamlit as st
 from pathlib import Path
+import numpy as np
+import pandas as pd
+import tensorflow as tf
+from PIL import Image
+
+@st.cache_resource
+def load_prediction_model():
+    model_path = Path("outputs/models/cherry_leaf_cnn.keras")
+    return tf.keras.models.load_model(model_path)
 
 st.set_page_config(
     page_title="Cherry Leaf Disease Detector",
@@ -187,11 +196,205 @@ elif page == "Visual Study":
 
 elif page == "Disease Prediction":
     st.header("Disease Prediction")
-    st.info("Image upload and prediction functionality will be added here.")
+
+    st.markdown("""
+    Upload one or more cherry-leaf images to check whether
+    they appear healthy or affected by powdery mildew.
+
+    The CNN analyses each image and returns a predicted
+    classification with estimated probabilities.
+    """)
+
+    uploaded_files = st.file_uploader(
+        "Upload cherry-leaf images",
+        type=["jpg", "jpeg", "png"],
+        accept_multiple_files=True
+    )
+
+    if uploaded_files:
+        model = load_prediction_model()
+
+        results = []
+
+        for uploaded_file in uploaded_files:
+            try:
+                image = Image.open(uploaded_file).convert("RGB")
+
+                # Match the image size used during model training
+                resized_image = image.resize((100, 100))
+
+                # Convert the image to a NumPy array
+                image_array = np.asarray(
+                    resized_image,
+                    dtype=np.float32
+                )
+
+                # Add the batch dimension expected by TensorFlow
+                image_batch = np.expand_dims(image_array, axis=0)
+
+                # Predict probability of powdery mildew
+                probability_mildew = float(
+                    model.predict(image_batch, verbose=0)[0][0]
+                )
+
+                probability_healthy = 1.0 - probability_mildew
+
+                predicted_class = (
+                    "Powdery Mildew"
+                    if probability_mildew >= 0.5
+                    else "Healthy"
+                )
+
+                st.divider()
+
+                col1, col2 = st.columns([1, 2])
+
+                with col1:
+                    st.image(
+                        image,
+                        caption=uploaded_file.name,
+                        use_container_width=True
+                    )
+
+                with col2:
+                    st.subheader(uploaded_file.name)
+
+                    st.write(
+                        f"**Prediction:** {predicted_class}"
+                    )
+
+                    st.write(
+                        f"**Healthy probability:** "
+                        f"{probability_healthy:.2%}"
+                    )
+
+                    st.write(
+                        f"**Powdery mildew probability:** "
+                        f"{probability_mildew:.2%}"
+                    )
+
+                    st.progress(probability_mildew)
+
+                results.append({
+                    "Filename": uploaded_file.name,
+                    "Prediction": predicted_class,
+                    "Healthy Probability": round(
+                        probability_healthy, 4
+                    ),
+                    "Powdery Mildew Probability": round(
+                        probability_mildew, 4
+                    )
+                })
+
+            except (OSError, ValueError) as error:
+                st.error(
+                    f"Could not process {uploaded_file.name}: {error}"
+                )
+
+        if results:
+            st.divider()
+            st.subheader("Prediction Results")
+
+            results_df = pd.DataFrame(results)
+
+            st.dataframe(
+                results_df,
+                use_container_width=True
+            )
+
+            csv_data = results_df.to_csv(index=False)
+
+            st.download_button(
+                label="Download Prediction Results",
+                data=csv_data,
+                file_name="cherry_leaf_predictions.csv",
+                mime="text/csv"
+            )
+
+    st.info(
+        "This model is intended to support visual assessment "
+        "and should not be considered a definitive plant diagnosis."
+    )
 
 elif page == "Project Hypothesis":
-    st.header("Project Hypothesis")
-    st.info("Hypothesis findings will be added here.")
+    st.header("Project Hypothesis and Validation")
+
+    st.markdown("""
+    This page presents the two project hypotheses and evaluates
+    them using the findings from the visual study and CNN model.
+
+    ## Hypothesis 1 — Visual Differences
+
+    **Hypothesis:**
+
+    Healthy cherry leaves and leaves affected by powdery mildew
+    have distinguishable visual characteristics.
+
+    **Validation approach:**
+
+    We examined random leaf samples, image montages,
+    average images, variability images and the difference
+    between the two class averages.
+
+    **Findings:**
+
+    - Healthy leaves generally appeared green.
+    - Powdery mildew leaves frequently displayed white,
+      powder-like patches.
+    - Average and variability images showed differences
+      in pixel colour and distribution between the classes.
+
+    **Conclusion:**
+
+    The visual analysis supports Hypothesis 1.
+
+    ---
+
+    ## Hypothesis 2 — Model Accuracy
+
+    **Hypothesis:**
+
+    A CNN can distinguish healthy cherry leaves from leaves
+    affected by powdery mildew with at least 97% accuracy.
+
+    **Validation approach:**
+
+    We trained a CNN using the training dataset and monitored
+    its performance using a separate validation dataset.
+
+    The final model was evaluated using 646 held-out test images.
+
+    **Findings:**
+
+    - Test accuracy: **99.69%**
+    - Correct predictions: **644 out of 646**
+    - Healthy recall: **100%**
+    - Powdery mildew recall: **99.37%**
+    - Exact duplicate files across dataset splits: **0**
+
+    **Conclusion:**
+
+    Hypothesis 2 is supported by the held-out test results.
+    The model exceeded the client's 97% accuracy target.
+
+    ---
+
+    ## Overall Conclusion
+
+    Both hypotheses are supported by the evidence collected
+    during the project.
+
+    The visual study identified differences between the
+    two categories, and the CNN achieved strong classification
+    performance on the provided dataset.
+    """)
+
+    st.warning(
+        "The model incorrectly classified two powdery mildew "
+        "images as healthy. Further testing on independently "
+        "collected photographs is recommended before relying "
+        "on the model in real-world agricultural decisions."
+    )
 
 elif page == "Model Performance":
     st.header("Model Performance")
