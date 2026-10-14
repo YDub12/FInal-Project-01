@@ -297,40 +297,6 @@ Displays test accuracy, loss, target accuracy, confusion matrix and classificati
 
 The `data/` folders contain local working datasets and are excluded from Git. The dashboard requires the trained model, evaluation outputs and visual-study images.
 
-## Running the Project Locally
-
-The project was developed using **Python 3.12** in GitHub Codespaces.
-
-1. Clone the repository and navigate to its root.
-2. Create and activate a virtual environment:
-
-   ```bash
-   python -m venv .venv
-   source .venv/bin/activate
-   ```
-
-3. Install the dashboard dependencies:
-
-   ```bash
-   python -m pip install -r requirements.txt
-   ```
-
-4. For notebook development, install the additional dependencies:
-
-   ```bash
-   python -m pip install -r requirements-dev.txt
-   ```
-
-5. Start Streamlit:
-
-   ```bash
-   python -m streamlit run app.py
-   ```
-
-6. Open the address shown in the terminal. In Codespaces, use the **Ports** tab to open the forwarded URL.
-
-To reproduce the complete data collection and training workflow, obtain authorised access to the Kaggle dataset and run the notebooks in numerical order. Do not commit credentials or original client images.
-
 ## Testing
 
 Testing covered dataset preparation, model evaluation, dashboard behaviour and deployment.
@@ -371,7 +337,7 @@ Testing covered dataset preparation, model evaluation, dashboard behaviour and d
 | Local startup | Streamlit launches in Codespaces | Passed |
 | Heroku deployment | Live application opens | Passed |
 
-**Testing limitations:** The held-out test images came from the provided dataset. Independent photographs are needed to evaluate real-world generalisation, and the classification probabilities have not been independently calibrated.
+**Testing limitations:** The held-out test images came from the provided dataset. Independent photographs are needed to evaluate real-world generalisation, and the classification probabilities have not been independently calibrated. But additional images within the original dataset have been used to validate the model.
 
 ## Deployment
 
