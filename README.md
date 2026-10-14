@@ -28,6 +28,38 @@ The application demonstrates image classification; it is not a substitute for pr
 
 Farmy & Foods operates cherry plantations across multiple farms and has experienced powdery mildew in its crops. The project brief describes a manual inspection process taking approximately 30 minutes per tree, with about one additional minute to apply treatment where required. With thousands of trees, manual inspection is difficult to scale.
 
+The project follows the CRISP-DM (Cross-Industry Standard Process for Data Mining) framework to connect the business problem with the machine-learning workflow.
+
+The business aims to investigate whether image analysis and machine learning can help identify potentially affected leaves more efficiently.
+
+#### Business Objectives
+
+The project addresses two business requirements:
+
+1. Visually distinguish healthy cherry leaves from leaves affected by powdery mildew.
+
+2. Predict whether a cherry leaf is healthy or affected by powdery mildew using an uploaded image.
+
+#### Dataset Understanding
+
+The dataset contains 4,208 labelled cherry-leaf images, with 2,104 healthy images and 2,104 powdery mildew images.
+
+The images are 256 × 256 pixels and include augmented variations of source photographs.
+
+The dataset is suitable for supervised binary image classification because each image has a known class label.
+
+#### Data Mining Goals
+
+- Investigate visual patterns associated with powdery mildew.
+- Train a CNN to classify cherry-leaf images.
+- Evaluate the model using held-out test data.
+- Achieve at least 97% test accuracy.
+- Make the model available through an interactive Streamlit dashboard.
+
+#### Business Success Criteria
+
+The predictive task is considered successful if the trained model achieves at least 97% accuracy on the held-out test dataset. The visualisation task is considered successful if the analysis demonstrates meaningful visual differences between the two classes and communicates those findings to dashboard users. The project does not measure actual time savings or treatment outcomes in a working agricultural environment.
+
 ### Business Requirement 1 — Visual Differentiation
 
 The client wants to distinguish healthy cherry leaves from leaves affected by powdery mildew. The project examines sample images and montages, generates average and pixel-variability images, and presents the differences in the dashboard.
