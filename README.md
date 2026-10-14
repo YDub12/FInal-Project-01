@@ -1,4 +1,4 @@
-***Cherry Leaf Powdery Mildew Detector***
+# Cherry Leaf Powdery Mildew Detector
 
 Project Overview
 
@@ -9,6 +9,32 @@ Using a Convolutional Neural Network (CNN), the model predicts whether a cherry 
 The project is designed to support the early identification of potential leaf disease through image analysis. A Streamlit dashboard is planned to allow users to explore the dataset, review model performance, and upload images for classification.
 
 Project status: Machine-learning development and evaluation completed. Streamlit dashboard and deployment are in development.
+
+## Live Application
+
+[Launch the Live Application](https://mildew-detection-fd7fc4092562.herokuapp.com/)
+
+The Cherry Leaf Powdery Mildew Detector is deployed on Heroku and provides an interactive interface for identifying powdery mildew in cherry leaf images.
+
+The application includes five pages:
+
+Project Summary: Introduces the project, business requirements and machine-learning approach.
+
+Visual Study: Compares healthy and powdery mildew leaves using average images, variability images and visual differences.
+
+Disease Prediction: Allows users to upload cherry leaf images, receive CNN predictions, view classification probabilities and download results as a CSV file.
+
+Project Hypothesis: Presents the project hypotheses and evaluates them against the findings.
+
+Model Performance: Displays test accuracy, loss, confusion matrix and classification metrics.
+
+Model Results
+
+The CNN achieved 99.69% accuracy on a held-out test dataset containing 646 cherry leaf images, exceeding the project's target of 97% accuracy.
+
+The model correctly classified 644 images and incorrectly classified two powdery mildew images as healthy.
+
+Although these results demonstrate strong performance on the provided dataset, further evaluation using independently collected images is recommended before using the application to support real-world agricultural decisions.
 
 ## Business Requirements
 
