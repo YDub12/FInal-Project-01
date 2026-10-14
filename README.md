@@ -1,586 +1,268 @@
 # Cherry Leaf Powdery Mildew Detector
 
-Project Overview
+## Project Overview
 
-The Cherry Leaf Powdery Mildew Detector is a machine-learning application designed to identify whether a cherry leaf is healthy or affected by powdery mildew.
+The **Cherry Leaf Powdery Mildew Detector** is a machine-learning application designed to identify whether a cherry leaf is healthy or affected by powdery mildew. It responds to a business challenge faced by Farmy & Foods, whose cherry plantations require regular disease inspections.
 
-The project was developed in response to a business challenge faced by Farmy & Foods, whose cherry plantations require regular inspection for signs of disease.
+A Convolutional Neural Network (CNN) was trained on labelled cherry-leaf images and integrated into a Streamlit dashboard. Users can explore visual differences, upload images for classification, review evaluation results and download predictions.
 
-A Convolutional Neural Network (CNN) was trained using labelled cherry-leaf images and integrated into an interactive Streamlit dashboard. Users can explore the visual differences between healthy and diseased leaves, upload images for classification, review model evaluation results and download predictions.
+The model achieved **99.69% accuracy on 646 held-out test images**, exceeding the client's **97%** target.
 
-The trained model achieved 99.69% accuracy on 646 held-out test images, exceeding the client's required accuracy of 97%.
+**Project status:** Model development, evaluation, dashboard development and Heroku deployment completed.
 
-Project status: Machine-learning development, model evaluation, Streamlit dashboard development and Heroku deployment completed.
+## Live Application
 
-Live Application
+**[Launch the Live Application](https://mildew-detection-fd7fc4092562.herokuapp.com/)**
 
-The application is deployed on Heroku.
+The dashboard has five pages:
 
-Launch the Live Application
+1. **Project Summary:** Project background, business requirements and approach.
+2. **Visual Study:** Average images, variability images and visual differences between classes.
+3. **Disease Prediction:** Multiple image uploads, CNN predictions, class probabilities and CSV download.
+4. **Project Hypothesis:** Hypotheses, validation methods and conclusions.
+5. **Model Performance:** Test accuracy, loss, confusion matrix and classification report.
 
-The dashboard contains five pages:
+The application demonstrates image classification; it is not a substitute for professional agricultural diagnosis.
 
-Project Summary — Introduces the project, business requirements, dataset and machine-learning approach.
+## Business Requirements
 
-Visual Study — Explores differences between healthy and powdery mildew leaves using average images, variability images and visual comparisons.
+Farmy & Foods operates cherry plantations across multiple farms and has experienced powdery mildew in its crops. The project brief describes a manual inspection process taking approximately 30 minutes per tree, with about one additional minute to apply treatment where required. With thousands of trees, manual inspection is difficult to scale.
 
-Disease Prediction — Allows users to upload cherry-leaf images, receive CNN predictions, view classification probabilities and download results as a CSV file.
+### Business Requirement 1 — Visual Differentiation
 
-Project Hypothesis — Presents the project hypotheses and evaluates them against the evidence collected.
+The client wants to distinguish healthy cherry leaves from leaves affected by powdery mildew. The project examines sample images and montages, generates average and pixel-variability images, and presents the differences in the dashboard.
 
-Model Performance — Displays test accuracy, loss, confusion matrix and classification metrics.
+### Business Requirement 2 — Disease Prediction
 
-The application is intended as a demonstration of machine-learning image classification. It is not a replacement for professional agricultural diagnosis.
+The client wants to predict whether a cherry leaf is healthy or affected by powdery mildew from an image. The project prepares labelled datasets, trains and evaluates a CNN against a **97% accuracy target**, and makes predictions available through the dashboard.
 
-Business Requirements
+## Project Hypotheses and Validation
 
-Farmy & Foods operates cherry plantations across multiple farms and has experienced problems with powdery mildew affecting its crops.
+### Hypothesis 1 — Visual Differences
 
-The existing inspection process involves employees manually examining samples of leaves to determine whether a tree is healthy or affected by powdery mildew.
+**Hypothesis:** Healthy cherry leaves and leaves affected by powdery mildew have distinguishable visual characteristics, particularly in colour and surface texture.
 
-According to the project brief, inspecting a tree takes approximately 30 minutes. Where disease is identified, applying the appropriate treatment takes approximately one additional minute.
+**Validation:** Random samples, image montages, average images, variability images and average-image differences were examined. Healthy leaves generally appeared green, while powdery mildew leaves frequently displayed white, powder-like patches. Differences in pixel colour and distribution were also visible.
 
-With thousands of cherry trees across multiple farms, this manual inspection process is time-consuming and difficult to scale.
+**Conclusion:** The visual study supports Hypothesis 1.
 
-The company is interested in investigating whether machine learning could support faster identification of potentially diseased leaves.
+### Hypothesis 2 — Model Accuracy
 
-Business Requirement 1 — Visual Differentiation
+**Hypothesis:** A CNN trained on labelled cherry-leaf images can achieve at least 97% accuracy on a held-out test dataset.
 
-The client wants to conduct a study to visually differentiate healthy cherry leaves from leaves affected by powdery mildew.
+**Validation:** The CNN was trained on the training split, monitored on the validation split and evaluated on **646 held-out test images**.
 
-Project response:
+- Test accuracy: **99.69%**
+- Correct predictions: **644 of 646**
+- Healthy recall: **100%**
+- Powdery mildew recall: **99.37%**
 
-Examine representative images from both classes.
+**Conclusion:** Hypothesis 2 is supported by the held-out test results. Performance on independently collected images remains unverified.
 
-Generate image montages and visual comparisons.
+## Dataset
 
-Calculate average images for each category.
+The cherry-leaf dataset was distributed through Kaggle as part of the Code Institute machine-learning project. It contains **4,208 images**, originally **256 × 256 pixels**, divided equally between two classes.
 
-Calculate pixel-variability images.
+| Class | Images |
+|---|---:|
+| Healthy | 2,104 |
+| Powdery mildew | 2,104 |
+| **Total** | **4,208** |
 
-Compare average healthy and diseased images.
+The dataset includes rotated and flipped variations, requiring care to reduce leakage between dataset splits.
 
-Present the findings in the Streamlit dashboard.
+### Dataset Split
 
-Business Requirement 2 — Disease Prediction
+| Dataset | Healthy | Powdery mildew | Total |
+|---|---:|---:|---:|
+| Training | 1,464 | 1,472 | 2,936 |
+| Validation | 310 | 316 | 626 |
+| Testing | 330 | 316 | 646 |
+| **Total** | **2,104** | **2,104** | **4,208** |
 
-The client wants to predict whether a cherry leaf is healthy or affected by powdery mildew using an image.
+This is approximately a 70% / 15% / 15% split by image count. Original and processed datasets are excluded from version control.
 
-Project response:
+## Machine-Learning Workflow
 
-Prepare labelled training, validation and test datasets.
+The project uses five Jupyter notebooks.
 
-Train a CNN to classify cherry-leaf images.
+### 1. Data Collection
 
-Evaluate the model using held-out test data.
+**Notebook:** `01 data_collection.ipynb`
 
-Aim for at least 97% classification accuracy.
+- Downloaded the Kaggle dataset.
+- Verified the two image categories, image count and dimensions.
+- Inspected the extracted directory structure.
+- Kept Kaggle credentials outside version control.
 
-Integrate the trained model into an interactive dashboard.
+### 2. Data Visualisation
 
-Allow users to upload images and download prediction results.
+**Notebook:** `02_data_visualisation.ipynb`
 
-Project Hypotheses and Validation
-
-Hypothesis 1 — Visual Differences
-
-Hypothesis: Healthy cherry leaves and leaves affected by powdery mildew exhibit distinguishable visual characteristics, particularly in colour and surface texture.
-
-Validation approach:
-
-The visual study examined random samples, image montages, average images, variability images and differences between the average images of the two classes.
-
-Findings:
-
-Healthy leaves generally appeared green, while leaves affected by powdery mildew frequently displayed white, powder-like patches.
-
-The average and variability images also showed differences in pixel colour and distribution between the two categories.
-
-Conclusion: The visual analysis supports Hypothesis 1.
-
-Hypothesis 2 — Model Accuracy
-
-Hypothesis: A CNN trained on labelled cherry-leaf images can achieve at least 97% classification accuracy on a held-out test dataset.
-
-Validation approach:
-
-A CNN was trained using the training dataset, monitored using a separate validation dataset and evaluated on 646 held-out test images.
-
-Findings:
-
-Test accuracy: 99.69%
-
-Correct predictions: 644 out of 646
-
-Healthy recall: 100%
-
-Powdery mildew recall: 99.37%
-
-Conclusion: Hypothesis 2 is supported by the held-out test results. The model exceeded the client's 97% accuracy target.
-
-These results apply to the provided dataset and do not guarantee equivalent performance on independently collected photographs.
-
-Dataset
-
-The dataset was obtained from Kaggle as part of the Code Institute machine-learning project.
-
-It contains 4,208 cherry-leaf images divided equally between two categories:
-
-Class
-
-Number of images
-
-Healthy
-
-2,104
-
-Powdery mildew
-
-2,104
-
-Total
-
-4,208
-
-The original images are 256 × 256 pixels.
-
-The dataset includes rotated and flipped image variations, which required additional care when splitting the data to reduce the risk of leakage between training and testing.
-
-Dataset Preparation
-
-Images were checked for corruption and organised into three datasets.
-
-Dataset
-
-Healthy
-
-Powdery mildew
-
-Total
-
-Training
-
-1,464
-
-1,472
-
-2,936
-
-Validation
-
-310
-
-316
-
-626
-
-Testing
-
-330
-
-316
-
-646
-
-Total
-
-2,104
-
-2,104
-
-4,208
-
-The split was approximately 70% training, 15% validation and 15% testing by image count.
-
-The original and processed dataset images are excluded from version control.
-
-Machine-Learning Workflow
-
-The project was developed using five Jupyter notebooks.
-
-1. Data Collection
-
-Notebook: 01 data_collection.ipynb
-
-The data collection notebook:
-
-Downloaded the dataset from Kaggle.
-
-Verified the two image categories.
-
-Confirmed that the dataset contained 4,208 images.
-
-Checked the original image dimensions.
-
-Established the dataset directory structure.
-
-Kaggle credentials were stored securely and excluded from version control.
-
-2. Data Visualisation
-
-Notebook: 02_data_visualisation.ipynb
-
-The visualisation notebook:
-
-Displayed random image samples.
-
-Generated image montages.
-
-Calculated average images for each class.
-
-Generated pixel-variability images.
-
-Compared average healthy and powdery mildew images.
-
-Saved visual-study outputs for the dashboard.
-
-The following files were generated:
-
+- Displayed random samples and image montages.
+- Generated average images and pixel-variability images for both classes.
+- Compared the two class averages.
+- Saved the following dashboard assets:
+
+```text
 outputs/visual_study/
 ├── healthy_average.png
 ├── mildew_average.png
 ├── healthy_variability.png
 ├── mildew_variability.png
 └── average_difference.png
+```
 
-3. Data Cleaning and Preparation
+### 3. Data Cleaning and Preparation
 
-Notebook: 03_data_cleaning.ipynb
+**Notebook:** `03_data_cleaning.ipynb`
 
-The data preparation notebook:
+- Checked all 4,208 images for corruption; **none were corrupt**.
+- Identified **1,847 source-image groups** using filename information.
+- Kept known augmented versions of the same source image in one split.
+- Created training, validation and test datasets.
+- Recorded split assignments in a local manifest excluded from Git.
 
-Checked all 4,208 images for corruption.
+### 4. Model Training
 
-Confirmed that no corrupt images were found.
+**Notebook:** `04_model_training.ipynb`
 
-Identified 1,847 source-image groups using filename information.
+A CNN was developed using TensorFlow/Keras with:
 
-Kept known augmented versions of source photographs within the same dataset split.
+- **100 × 100** RGB input images (resized during data loading and inference).
+- A built-in pixel-value rescaling layer.
+- Three convolutional and max-pooling stages.
+- A dense layer, dropout and sigmoid binary-classification output.
 
-Created training, validation and test datasets.
+| Setting | Value |
+|---|---|
+| Optimiser | Adam |
+| Learning rate | 0.001 |
+| Loss | Binary crossentropy |
+| Metric | Accuracy |
+| Early stopping | Validation loss; patience 3 |
 
-Recorded split assignments in a manifest.
+Training ended after **eight epochs**, with the best validation-loss weights restored from epoch five.
 
-The split manifest is stored locally within the processed-data directory and is excluded from version control.
+Saved outputs:
 
-4. Model Training
+- `outputs/models/cherry_leaf_cnn.keras`
+- `outputs/models/training_history.csv`
 
-Notebook: 04_model_training.ipynb
+The saved model performs its own pixel-value rescaling. Uploaded images must **not** be normalised a second time.
 
-A CNN was developed using TensorFlow and Keras.
+### 5. Model Evaluation
 
-The model architecture includes:
+**Notebook:** `05_model_evaluation.ipynb`
 
-Input images resized to 100 × 100 pixels.
+The final model was evaluated on **646 held-out images**, not used during training or validation.
 
-Pixel-value normalisation.
+| Metric | Result |
+|---|---:|
+| Test accuracy | 99.69% |
+| Test loss | 0.0289 |
+| Correct classifications | 644 |
+| Incorrect classifications | 2 |
+| Healthy precision | 99.40% |
+| Healthy recall | 100.00% |
+| Healthy F1-score | 99.70% |
+| Powdery mildew precision | 100.00% |
+| Powdery mildew recall | 99.37% |
+| Powdery mildew F1-score | 99.68% |
 
-Convolutional layers for feature extraction.
+#### Confusion Matrix
 
-Max-pooling layers for dimensionality reduction.
+| Actual class | Predicted healthy | Predicted powdery mildew |
+|---|---:|---:|
+| Healthy | 330 | 0 |
+| Powdery mildew | 2 | 314 |
 
-Dense layers for classification.
+The two errors were **false negatives**: diseased leaves classified as healthy. This matters because missed disease predictions could delay action.
 
-Dropout to reduce overfitting.
+The accuracy exceeded the 97% target by approximately **2.69 percentage points**. This result does not guarantee the same accuracy on new photographs collected under different conditions.
 
-A sigmoid output for binary classification.
+### Data Leakage Checks
 
-The model was compiled using:
+- Related images were grouped using filename-derived source identifiers.
+- Known flipped and rotated variations remained in the same split.
+- No identified source-image groups overlapped across splits.
+- SHA-256 hashes identified **4,208 unique image files**.
+- No byte-for-byte duplicates were found across dataset splits.
 
-Setting
+These measures reduce leakage risk but cannot rule out every visually equivalent image saved with different transformations or compression.
 
-Value
+## Streamlit Dashboard
 
-Optimiser
+### Project Summary
 
-Adam
+Introduces the project, business requirements, dataset and approach.
 
-Learning rate
+### Visual Study
 
-0.001
+Displays average images, variability images and visual comparisons.
 
-Loss function
+### Disease Prediction
 
-Binary crossentropy
+Users can upload JPG, JPEG or PNG files, process multiple images, view predicted classes and probabilities, and download a CSV of results. The sigmoid classification threshold is **0.5**.
 
-Performance metric
+### Project Hypothesis
 
-Accuracy
+Explains the two hypotheses, validation methods and conclusions.
 
-Early stopping
+### Model Performance
 
-Validation loss
+Displays test accuracy, loss, target accuracy, confusion matrix and classification report. The dashboard reads saved model and evaluation files rather than recomputing test metrics on each visit.
 
-Early-stopping patience
+## Dashboard Screenshots
 
-3 epochs
+### Project Summary
 
-Training ended after eight epochs, with the best validation-loss weights restored from epoch five.
+![Project Summary page](docs/screenshots/project_summary.png)
 
-The trained model was saved to:
+![Additional Project Summary view](docs/screenshots/project_summary2.png)
 
-outputs/models/cherry_leaf_cnn.keras
+### Visual Study
 
-The training history was saved to:
+![Visual Study page](docs/screenshots/visual_study.png)
 
-outputs/models/training_history.csv
+### Disease Prediction
 
-The saved model includes its own pixel-value rescaling layer. Therefore, uploaded images are resized and converted into numerical arrays before prediction but are not normalised a second time.
+![Disease Prediction page](docs/screenshots/disease_prediction.png)
 
-5. Model Evaluation
+### Project Hypothesis
 
-Notebook: 05_model_evaluation.ipynb
+![Project Hypothesis page](docs/screenshots/project_hypothesis1.png)
 
-The final CNN was evaluated on the held-out test dataset containing 646 images.
+![Additional Project Hypothesis view](docs/screenshots/project_hypothesis2.png)
 
-The test images were not used during training or validation.
+### Model Performance
 
-Test Performance
+![Model Performance page](docs/screenshots/model_performance.png)
 
-Metric
+![Additional Model Performance view](docs/screenshots/model_performance2.png)
 
-Result
+## Technologies Used
 
-Test accuracy
+| Technology | Purpose |
+|---|---|
+| Python | Main programming language |
+| Jupyter Notebook | Exploration, preparation, training and evaluation |
+| NumPy | Image arrays and numerical calculations |
+| Pandas | Dataset records, reports and CSV results |
+| Matplotlib | Charts and visualisations |
+| Seaborn | Confusion matrix visualisation |
+| Pillow | Image loading and resizing |
+| Scikit-learn | Dataset splitting and evaluation metrics |
+| TensorFlow / Keras | CNN training, saving and inference |
+| Streamlit | Interactive dashboard |
+| PyArrow | Streamlit DataFrame support |
+| Git and GitHub | Version control and repository hosting |
+| GitHub Codespaces | Development environment |
+| Heroku | Live deployment |
 
-99.69%
+## Repository Structure
 
-Test loss
-
-0.0289
-
-Correct classifications
-
-644
-
-Incorrect classifications
-
-2
-
-Healthy precision
-
-99.40%
-
-Healthy recall
-
-100.00%
-
-Healthy F1-score
-
-99.70%
-
-Powdery mildew precision
-
-100.00%
-
-Powdery mildew recall
-
-99.37%
-
-Powdery mildew F1-score
-
-99.68%
-
-Confusion Matrix
-
-Actual class
-
-Predicted healthy
-
-Predicted powdery mildew
-
-Healthy
-
-330
-
-0
-
-Powdery mildew
-
-2
-
-314
-
-The model correctly classified all 330 healthy images and 314 of the 316 powdery mildew images.
-
-The two incorrect predictions were false negatives: leaves affected by powdery mildew that were classified as healthy.
-
-This is an important limitation because a missed disease prediction could delay appropriate action.
-
-Accuracy Target
-
-The model achieved 99.69% accuracy, exceeding the client's 97% target by approximately 2.69 percentage points.
-
-The accuracy figure describes performance on the available held-out test dataset. It does not establish performance under all real-world conditions.
-
-Data Leakage Checks
-
-The dataset contains augmented images, including rotated and flipped versions of source photographs.
-
-A conventional random image split could place related images in both training and testing datasets, potentially producing overly optimistic evaluation results.
-
-To reduce this risk:
-
-Images were grouped using identifiers derived from their filenames.
-
-Known augmented versions were assigned to the same dataset split.
-
-No identified source-image groups overlapped across training, validation and testing.
-
-SHA-256 hashing identified 4,208 unique image files.
-
-No byte-for-byte duplicate files were found across dataset splits.
-
-These checks reduce leakage risk but do not rule out every possible visual duplicate or transformed photograph.
-
-Streamlit Dashboard
-
-The completed Streamlit dashboard provides an interactive interface for exploring the project and using the trained CNN.
-
-Project Summary
-
-Introduces the project, business requirements, dataset and machine-learning approach.
-
-Visual Study
-
-Displays average images, pixel-variability images and differences between healthy and powdery mildew leaves.
-
-Disease Prediction
-
-Allows users to:
-
-Upload JPG, JPEG or PNG images.
-
-Upload multiple images in one session.
-
-View uploaded images.
-
-Receive a healthy or powdery mildew prediction.
-
-View classification probabilities.
-
-Download prediction results as a CSV file.
-
-The application uses a classification threshold of 0.5 for the CNN's sigmoid output.
-
-Project Hypothesis
-
-Presents the two hypotheses and explains how the visual analysis and model evaluation support them.
-
-Model Performance
-
-Displays:
-
-Test accuracy.
-
-Test loss.
-
-Required accuracy target.
-
-Confusion matrix.
-
-Classification report.
-
-Interpretation of the evaluation results.
-
-The dashboard reads the saved model and evaluation files rather than recalculating the test results each time the page loads.
-
-Dashboard Screenshots
-
-Project Summary
-
-
-
-
-
-Visual Study
-
-
-
-Disease Prediction
-
-
-
-Project Hypothesis
-
-
-
-
-
-Model Performance
-
-
-
-
-
-Technologies Used
-
-Technology
-
-Purpose
-
-Python
-
-Main programming language
-
-Jupyter Notebook
-
-Data exploration, preparation, training and evaluation
-
-NumPy
-
-Numerical arrays and image calculations
-
-Pandas
-
-Data manipulation, reports and prediction results
-
-Matplotlib
-
-Charts and visualisations
-
-Seaborn
-
-Statistical visualisations and confusion matrix
-
-Pillow
-
-Image loading, conversion and resizing
-
-Scikit-learn
-
-Dataset splitting and model evaluation
-
-TensorFlow / Keras
-
-CNN development, training and inference
-
-Streamlit
-
-Interactive web dashboard
-
-PyArrow
-
-DataFrame display support
-
-Git
-
-Version control
-
-GitHub
-
-Repository hosting
-
-GitHub Codespaces
-
-Development environment
-
-Heroku
-
-Application deployment
-
-Repository Structure
-
+```text
 .
 ├── app.py
 ├── jupyter_notebooks/
@@ -591,11 +273,6 @@ Repository Structure
 │   └── 05_model_evaluation.ipynb
 ├── outputs/
 │   ├── visual_study/
-│   │   ├── healthy_average.png
-│   │   ├── mildew_average.png
-│   │   ├── healthy_variability.png
-│   │   ├── mildew_variability.png
-│   │   └── average_difference.png
 │   ├── models/
 │   │   ├── cherry_leaf_cnn.keras
 │   │   └── training_history.csv
@@ -616,512 +293,237 @@ Repository Structure
 ├── .slugignore
 ├── .gitignore
 └── README.md
+```
 
-The data/ directories contain local working datasets and are excluded from version control.
+The `data/` folders contain local working datasets and are excluded from Git. The dashboard requires the trained model, evaluation outputs and visual-study images.
 
-The saved CNN, evaluation outputs and visual-study images are required by the dashboard.
+## Running the Project Locally
 
-Running the Project Locally
+The project was developed using **Python 3.12** in GitHub Codespaces.
 
-The project was developed using Python 3.12 in GitHub Codespaces.
+1. Clone the repository and navigate to its root.
+2. Create and activate a virtual environment:
 
-1. Clone the Repository
+   ```bash
+   python -m venv .venv
+   source .venv/bin/activate
+   ```
 
-Clone the project repository and navigate into its root directory.
+3. Install the dashboard dependencies:
 
-2. Create a Virtual Environment
+   ```bash
+   python -m pip install -r requirements.txt
+   ```
 
-python -m venv .venv
-source .venv/bin/activate
+4. For notebook development, install the additional dependencies:
 
-3. Install Dependencies
+   ```bash
+   python -m pip install -r requirements-dev.txt
+   ```
 
-To install the dashboard dependencies:
+5. Start Streamlit:
 
-python -m pip install -r requirements.txt
+   ```bash
+   python -m streamlit run app.py
+   ```
 
-To install the additional development dependencies used by the notebooks:
+6. Open the address shown in the terminal. In Codespaces, use the **Ports** tab to open the forwarded URL.
 
-python -m pip install -r requirements-dev.txt
+To reproduce the complete data collection and training workflow, obtain authorised access to the Kaggle dataset and run the notebooks in numerical order. Do not commit credentials or original client images.
 
-4. Launch the Dashboard
+## Testing
 
-From the project root, run:
+Testing covered dataset preparation, model evaluation, dashboard behaviour and deployment.
 
-python -m streamlit run app.py
+### Data Validation
 
-Open the local Streamlit address shown in the terminal.
+| Test | Result | Status |
+|---|---|---|
+| Image count | 4,208 images | Passed |
+| Class categories | Healthy and powdery mildew | Passed |
+| Corrupt image check | None found | Passed |
+| Dataset split totals | 2,936 train / 626 validation / 646 test | Passed |
+| Source-image group overlap | None identified across splits | Passed |
+| Exact duplicate file check | None across splits | Passed |
 
-In GitHub Codespaces, open the forwarded port through the Ports tab.
+### Model Evaluation
 
-5. Run the Notebooks
+| Test | Target | Actual result | Status |
+|---|---|---|---|
+| Test accuracy | At least 97% | 99.69% | Passed |
+| Healthy classification | Correctly identify healthy leaves | 330/330 | Passed |
+| Powdery mildew classification | Correctly identify diseased leaves | 314/316 | Passed with limitation |
+| Held-out evaluation | Separate test data | 646 images | Passed |
 
-Open the Jupyter notebooks and execute them in numerical order.
+### Dashboard Functionality
 
-Reproducing the complete training workflow requires access to the original Kaggle dataset.
+| Feature | Expected behaviour | Status |
+|---|---|---|
+| Project Summary | Project information displays | Passed |
+| Visual Study | Visual-study images display | Passed |
+| Disease Prediction | Uploaded images receive predictions | Passed |
+| Multiple uploads | Multiple images can be processed | Passed |
+| Probabilities | Class probabilities display | Passed |
+| CSV download | Prediction results can be downloaded | Passed |
+| Project Hypothesis | Hypotheses and findings display | Passed |
+| Model Performance | Metrics, confusion matrix and report display | Passed |
+| Navigation | All pages accessible | Passed |
+| Local startup | Streamlit launches in Codespaces | Passed |
+| Heroku deployment | Live application opens | Passed |
 
-Kaggle credentials must be configured securely and must not be committed to the repository.
+**Testing limitations:** The held-out test images came from the provided dataset. Independent photographs are needed to evaluate real-world generalisation, and the classification probabilities have not been independently calibrated.
 
-Testing
+## Deployment
 
-Testing was carried out throughout development to verify the dataset, machine-learning workflow and dashboard functionality.
+### Heroku
 
-Data Validation
+**[Open the Deployed Application](https://mildew-detection-fd7fc4092562.herokuapp.com/)**
 
-Test
+### Deployment Configuration
 
-Result
+| File | Purpose |
+|---|---|
+| `app.py` | Main dashboard |
+| `requirements.txt` | Deployment dependencies |
+| `requirements-dev.txt` | Development and notebook dependencies |
+| `Procfile` | Heroku web process startup command |
+| `setup.sh` | Streamlit server configuration |
+| `.python-version` | Python 3.12 specification |
+| `.slugignore` | Excludes unnecessary deployment files |
 
-Status
+The application loads `outputs/models/cherry_leaf_cnn.keras` and reads visual-study and evaluation assets from `outputs/`. Original and processed images are not required for inference.
 
-Verify dataset contains 4,208 images
+### Deployment Process
 
-4,208 images confirmed
+1. Prepared the dashboard and saved model artifacts.
+2. Separated dashboard and notebook dependencies.
+3. Configured Heroku startup through `Procfile` and `setup.sh`.
+4. Configured Streamlit to use the platform-assigned port.
+5. Excluded unnecessary files using `.slugignore`.
+6. Authenticated with Heroku using browser-based login and MFA.
+7. Deployed the application and opened the live dashboard.
+8. Checked the application and model-performance pages.
 
-Passed
+During testing, a PyArrow/NumPy compatibility issue was resolved by pinning **`pyarrow==17.0.0`**. Confirm this dependency fix has also been deployed to Heroku. The application uses CPU-based TensorFlow inference and does not require a GPU.
 
-Verify two image categories
+## Bugs, Issues and Resolutions
 
-Healthy and powdery mildew confirmed
+### 1. Python Virtual Environment and Package Installation
 
-Passed
+**Issue:** Codespaces had `PIP_USER=yes`, which conflicted with installing packages in the virtual environment.
 
-Check image corruption
+**Resolution:** Ran `unset PIP_USER`, activated `.venv` and selected the correct Jupyter kernel.
 
-No corrupt images identified
+### 2. Kaggle Authentication and Dataset Paths
 
-Passed
+**Issue:** Kaggle authentication required configuration, and the extracted dataset contained an extra nested directory.
 
-Check dataset split totals
+**Resolution:** Stored credentials privately with restricted permissions and updated notebook paths after inspecting the folders.
 
-2,936 training, 626 validation, 646 testing
+### 3. Image File Extension Differences
 
-Passed
+**Issue:** Some images had uppercase `.JPG` extensions and could be missed by lowercase-only filters.
 
-Check source-image group overlap
+**Resolution:** Normalised extensions with `.suffix.lower()`, ensuring all 4,208 images were included.
 
-No identified groups shared across splits
+### 4. Jupyter Syntax and Working Directory
 
-Passed
+**Issue:** An incomplete `try` block caused an `IndentationError`, and working-directory changes affected file paths.
 
-Check exact duplicate files
+**Resolution:** Corrected the code and verified the working directory before file operations.
 
-No byte-for-byte duplicates across splits
+### 5. Kernel Crash During Image Analysis
 
-Passed
+**Issue:** Loading many full-resolution images simultaneously exhausted notebook memory.
 
-Model Evaluation
+**Resolution:** Rewrote mean and variance calculations to process images incrementally.
 
-Test
+### 6. Dataset Splitting and Augmented Images
 
-Expected result
+**Issue:** Random splitting could place augmented versions of the same photograph in different splits. An early attempt also produced incorrect group counts.
 
-Actual result
+**Resolution:** Split 1,847 filename-derived source-image groups without overlap and checked exact duplicates with SHA-256.
 
-Status
+### 7. TensorFlow Warnings
 
-Test accuracy
+**Issue:** TensorFlow displayed dataset shuffling and `OUT_OF_RANGE: End of sequence` messages.
 
-At least 97%
+**Resolution:** Reviewed the messages; training and evaluation completed successfully without requiring changes.
 
-99.69%
+### 8. Saved Keras Model Not Displaying in VS Code
 
-Passed
+**Issue:** VS Code could not display the `.keras` model as text.
 
-Healthy classification
+**Resolution:** Treated it as a binary model artifact and verified loading through TensorFlow/Keras.
 
-Correctly identify healthy leaves
+### 9. PyArrow and NumPy Compatibility
 
-330 of 330
+**Issue:** The classification report failed to display with:
 
-Passed
-
-Powdery mildew classification
-
-Correctly identify diseased leaves
-
-314 of 316
-
-Passed with limitation
-
-Held-out evaluation
-
-Use separate test data
-
-646 test images
-
-Passed
-
-The two false-negative predictions are documented as a model limitation.
-
-Dashboard Functionality
-
-Feature
-
-Expected result
-
-Status
-
-Project Summary
-
-Project information displays correctly
-
-Passed
-
-Visual Study
-
-Average, variability and difference images display
-
-Passed
-
-Disease Prediction
-
-Users can upload images and receive predictions
-
-Passed
-
-Multiple image uploads
-
-Multiple images can be processed
-
-Passed
-
-Prediction probabilities
-
-Classification probabilities display correctly
-
-Passed
-
-CSV download
-
-Prediction results can be downloaded
-
-Passed
-
-Project Hypothesis
-
-Hypotheses and conclusions display correctly
-
-Passed
-
-Model Performance
-
-Accuracy, confusion matrix and classification report display
-
-Passed
-
-Navigation
-
-Users can switch between dashboard pages
-
-Passed
-
-Local application startup
-
-Streamlit starts in Codespaces
-
-Passed
-
-Heroku deployment
-
-Application loads from its deployed URL
-
-Passed
-
-Testing Limitations
-
-The model was evaluated using the provided cherry-leaf dataset.
-
-Although the data-splitting process reduced the risk of leakage, further testing on independently collected photographs is required to establish performance under real-world agricultural conditions.
-
-Classification probabilities have not been independently calibrated.
-
-Deployment
-
-Heroku
-
-The application is deployed on Heroku.
-
-Open the Deployed Application
-
-Deployment Configuration
-
-The deployment uses the following files:
-
-File
-
-Purpose
-
-app.py
-
-Main Streamlit application
-
-requirements.txt
-
-Production dependencies
-
-requirements-dev.txt
-
-Development and notebook dependencies
-
-Procfile
-
-Heroku web-process startup command
-
-setup.sh
-
-Streamlit server configuration
-
-.python-version
-
-Python 3.12 runtime specification
-
-.slugignore
-
-Excludes unnecessary files from deployment
-
-The application loads its trained CNN from:
-
-outputs/models/cherry_leaf_cnn.keras
-
-The evaluation and visual-study files are loaded from the outputs/ directory.
-
-The original and processed dataset images are not required to run the deployed dashboard.
-
-Deployment Process
-
-The deployment process involved:
-
-Preparing the Streamlit application and saved model artifacts.
-
-Separating dashboard dependencies from notebook development dependencies.
-
-Configuring the Heroku startup command using Procfile.
-
-Configuring Streamlit to use the hosting environment's assigned port.
-
-Excluding unnecessary files from deployment using .slugignore.
-
-Authenticating with Heroku using browser-based login and multifactor authentication.
-
-Deploying the application to Heroku.
-
-Opening the live application and checking that the dashboard loaded successfully.
-
-Deployment Verification
-
-The application was successfully launched on Heroku.
-
-The dashboard's navigation, model prediction interface and evaluation pages were checked during development and deployment testing.
-
-A PyArrow and NumPy compatibility issue was identified during dashboard testing and resolved by pinning PyArrow to version 17.0.0.
-
-The application uses TensorFlow CPU for inference and does not require GPU hardware.
-
-Bugs, Issues and Resolutions
-
-Several technical challenges were encountered during development. The following issues were investigated and resolved.
-
-1. Python Virtual Environment and Package Installation
-
-Issue: Package installation initially failed in GitHub Codespaces because the environment had PIP_USER set to yes, which conflicted with package installation inside the virtual environment.
-
-Resolution: The environment variable was unset using:
-
-unset PIP_USER
-
-The virtual environment was activated before installing dependencies, and the correct Python interpreter was selected as the Jupyter kernel.
-
-2. Kaggle Authentication and Dataset Paths
-
-Issue: Downloading the Kaggle dataset required authentication. The extracted dataset also contained an additional nested directory.
-
-Resolution: Kaggle credentials were stored in the user's private .kaggle directory with restricted permissions. The extracted folder structure was inspected, and notebook paths were updated.
-
-3. Image File Extension Differences
-
-Issue: Some images used uppercase .JPG extensions, which could be missed by lowercase-only file filters.
-
-Resolution: File extensions were normalised using .suffix.lower() before checking supported image formats.
-
-This ensured that all 4,208 images were included.
-
-4. Jupyter Notebook Syntax and Working Directory
-
-Issue: A notebook template contained an incomplete try block, causing an IndentationError. File paths also required care when switching between notebook and project-root directories.
-
-Resolution: The invalid code was corrected, and the working directory was verified before file operations.
-
-5. Kernel Crashing During Image Analysis
-
-Issue: The Jupyter kernel crashed when average and variability images were calculated by loading too many full-resolution images into memory simultaneously.
-
-Resolution: The calculation was rewritten to process images incrementally using an online mean and variance algorithm.
-
-This reduced memory usage and allowed the visual analysis to complete.
-
-6. Dataset Splitting and Augmented Images
-
-Issue: The dataset contained rotated and flipped versions of source photographs. Random image splitting could place related images in different datasets and increase leakage risk.
-
-An initial attempt at constructing the split lists also produced incorrect group counts.
-
-Resolution: Images were grouped using filename-derived source identifiers, and groups were assigned to training, validation or testing.
-
-All 1,847 identified source-image groups were assigned without group overlap.
-
-A subsequent SHA-256 check found no exact duplicate files across the splits.
-
-7. TensorFlow Warnings
-
-Issue: TensorFlow displayed warnings relating to dataset shuffling and an OUT_OF_RANGE: End of sequence message during evaluation.
-
-Resolution: The messages were reviewed. Training data was already shuffled when the dataset was created, and evaluation completed successfully.
-
-No further changes were required.
-
-8. Saved Keras Model Not Displaying in VS Code
-
-Issue: VS Code reported that the saved .keras file was too large to display in the text editor.
-
-Resolution: The file was identified as a binary model artifact rather than a text file.
-
-The model was loaded using TensorFlow/Keras to verify that it could be used.
-
-9. PyArrow and NumPy Compatibility
-
-Issue: The Model Performance page displayed an import error when attempting to show the classification report:
-
+```text
 ImportError: pyarrow requires NumPy 2.0 or newer, found 1.26.1
+```
 
-Resolution: PyArrow was pinned to version 17.0.0, which is compatible with the project's NumPy version.
+**Resolution:** Pinned `pyarrow==17.0.0`, compatible with the project's NumPy version, and retested the report.
 
-The classification report was tested again and displayed successfully.
+### 10. Streamlit Port Already in Use
 
-10. Streamlit Port Already in Use
+**Issue:** Port 8501 was occupied by an earlier or suspended Streamlit process.
 
-Issue: During local testing in Codespaces, Streamlit failed to restart because port 8501 was already occupied.
+**Resolution:** Identified processes with `ps aux | grep '[s]treamlit'`, stopped the relevant process and reopened the dashboard through Codespaces port forwarding.
 
-Some earlier Streamlit processes had remained running or had been suspended.
+### 11. Streamlit CORS Warning
 
-Resolution: Running Streamlit processes were identified using:
+**Issue:** Disabling CORS while XSRF protection was enabled caused a configuration warning.
 
-ps aux | grep '[s]treamlit'
+**Resolution:** Removed the conflicting CORS setting from `setup.sh` and retained Streamlit's default security protections.
 
-The relevant processes were stopped, and Streamlit was restarted.
+### Lessons Learned
 
-The dashboard was then accessed through the Codespaces forwarded port.
+The project highlighted the importance of environment management, file-path validation, memory-efficient image processing, leakage-aware splitting, dependency compatibility and end-to-end deployment testing.
 
-11. Streamlit CORS Configuration Warning
+## Known Limitations
 
-Issue: The original Streamlit setup disabled CORS while XSRF protection remained enabled, causing a configuration warning.
+- Evaluation used images from the provided dataset, not independently collected photographs.
+- Augmented images complicate assessment of generalisation.
+- Exact-file hashing cannot detect all transformed or visually equivalent images.
+- Two powdery mildew leaves were incorrectly classified as healthy.
+- Model probabilities have not been independently calibrated.
+- Performance under different lighting, camera and environmental conditions is unknown.
+- The classifier recognises only two classes and cannot diagnose other cherry-leaf diseases.
+- Predictions should not be the sole basis for agricultural treatment decisions.
 
-Resolution: The setup script was updated to remove the conflicting CORS setting while retaining Streamlit's default security protections.
+## Future Improvements
 
-Lessons Learned
+- Evaluate on independently collected cherry-leaf photographs.
+- Investigate the two false-negative predictions.
+- Assess probability calibration and alternative thresholds.
+- Compare the CNN with transfer-learning approaches.
+- Add other disease categories.
+- Test robustness under varying lighting and image quality.
+- Explore integration with wider agricultural monitoring systems.
 
-These challenges reinforced the importance of:
+## Main Data Analysis and Machine Learning Libraries
 
-Checking environment configuration before installing packages.
+- **NumPy:** Numerical arrays, image preprocessing and pixel-level calculations.
+- **Pandas:** Data records, evaluation reports and downloadable results.
+- **Matplotlib and Seaborn:** Image visualisations, charts and confusion matrix.
+- **Pillow:** Loading, converting and resizing images.
+- **Scikit-learn:** Dataset splitting and classification metrics.
+- **TensorFlow and Keras:** CNN training, saving, loading and inference.
+- **Streamlit:** Interactive web application.
+- **PyArrow:** DataFrame display support.
 
-Validating file paths and image formats.
+## Credits
 
-Managing memory efficiently when processing images.
+### Dataset and Project Brief
 
-Preventing data leakage during dataset preparation.
+The project was developed using the Code Institute machine-learning project framework and the cherry-leaf dataset distributed through Kaggle.
 
-Verifying saved model artifacts.
+### Documentation and Development Resources
 
-Testing dependency compatibility.
+Documentation for Python, TensorFlow, Keras, Streamlit, NumPy, Pandas, Matplotlib, Seaborn, Pillow and Scikit-learn supported development. Add specific links for any tutorials, repositories or external code actually used.
 
-Checking running processes and server ports.
+### AI Assistance
 
-Testing the application locally before deployment.
-
-Known Limitations
-
-The project has several limitations:
-
-Evaluation was performed using images from the provided dataset.
-
-The dataset includes augmented images, which can complicate assessment of model generalisation.
-
-Exact-file hashing cannot identify every visually equivalent or transformed photograph.
-
-Two diseased leaves were incorrectly classified as healthy.
-
-Classification probabilities have not been independently calibrated.
-
-Performance on photographs from different cameras, lighting conditions and environments has not been established.
-
-The model performs binary classification and does not diagnose other cherry-leaf diseases.
-
-The application is a demonstration and should not be used as the sole basis for agricultural treatment decisions.
-
-Future Improvements
-
-Potential future improvements include:
-
-Testing the model using independently collected cherry-leaf photographs.
-
-Investigating the two false-negative predictions.
-
-Assessing probability calibration and alternative classification thresholds.
-
-Comparing the CNN with transfer-learning approaches.
-
-Introducing additional cherry-leaf disease categories.
-
-Testing model robustness under different lighting and image-quality conditions.
-
-Exploring ways to integrate predictions into a wider agricultural monitoring workflow.
-
-Main Data Analysis and Machine Learning Libraries
-
-NumPy
-
-Used for numerical arrays, image preprocessing and pixel-level calculations.
-
-Pandas
-
-Used for dataset records, evaluation reports and downloadable prediction results.
-
-Matplotlib and Seaborn
-
-Used for image visualisation, charts and the confusion matrix.
-
-Pillow
-
-Used for loading, converting and resizing images.
-
-Scikit-learn
-
-Used for dataset splitting, classification metrics and evaluation.
-
-TensorFlow and Keras
-
-Used to build, train, save, load and evaluate the CNN.
-
-Streamlit
-
-Used to create the interactive web dashboard.
-
-PyArrow
-
-Used by Streamlit for DataFrame display.
-
-Credits
-
-Dataset and Project Brief
-
-The project was developed using the Code Institute machine-learning project framework and the cherry-leaf image dataset distributed through Kaggle.
-
-Documentation and Development Resources
-
-Documentation and resources associated with Python, TensorFlow, Keras, Streamlit, NumPy, Pandas, Matplotlib, Seaborn, Pillow and Scikit-learn supported development.
-
-AI Assistance
-
-AI assistance was used for code explanations, debugging, documentation drafting and deployment troubleshooting.
-
-The model training, evaluation results and application functionality were tested within the project environment.
+AI assistance was used for code explanations, debugging, documentation drafting and deployment troubleshooting. The model training, evaluation and application functionality were tested within the project environment.
