@@ -32,13 +32,26 @@ The project follows the CRISP-DM (Cross-Industry Standard Process for Data Minin
 
 The business aims to investigate whether image analysis and machine learning can help identify potentially affected leaves more efficiently.
 
-#### Business Objectives
+## Rationale to Map Business Requirements to Data Visualisations and Machine Learning Tasks
 
-The project addresses two business requirements:
+The project uses data visualisation and machine learning to address the two business requirements identified by Farmy & Foods.
 
-1. Visually distinguish healthy cherry leaves from leaves affected by powdery mildew.
+| Business Requirement | Data Visualisation or Machine Learning Task | Implementation | Success Criteria |
+|---|---|---|---|
+| **BR1: Visual Differentiation** | Explore visual characteristics of healthy and powdery mildew leaves. | Display sample images and montages, calculate average and variability images, and compare the class averages. Present the findings on the Streamlit Visual Study page. | Identify and communicate observable differences between the two classes. |
+| **BR2: Disease Prediction** | Develop and evaluate a supervised binary image classification model. | Prepare training, validation and test datasets, train a CNN, evaluate its predictions using accuracy and a confusion matrix, and provide image classification through Streamlit. | Achieve at least **97% accuracy** on the held-out test dataset and provide predictions for uploaded images. |
 
-2. Predict whether a cherry leaf is healthy or affected by powdery mildew using an uploaded image.
+### Rationale
+
+**Business Requirement 1** is addressed through exploratory data analysis because the client needs to understand the visible characteristics that distinguish healthy leaves from leaves affected by powdery mildew.
+
+Average images, variability images and image comparisons provide evidence of differences in colour, texture and appearance. These findings are presented in the dashboard's **Visual Study** page.
+
+**Business Requirement 2** is addressed through supervised machine learning because the client needs to classify new leaf images rather than only compare existing examples.
+
+A Convolutional Neural Network was selected because CNNs can learn spatial features from image data. The model was evaluated using a held-out test dataset and achieved **99.69% accuracy**, exceeding the client's **97% target**.
+
+The dashboard's **Disease Prediction** page makes the trained model accessible to users, while the **Model Performance** page communicates its evaluation results and limitations.
 
 #### Dataset Understanding
 
@@ -402,7 +415,7 @@ The application loads `outputs/models/cherry_leaf_cnn.keras` and reads visual-st
 7. Deployed the application and opened the live dashboard.
 8. Checked the application and model-performance pages.
 
-During testing, a PyArrow/NumPy compatibility issue was resolved by pinning **`pyarrow==17.0.0`**. Confirm this dependency fix has also been deployed to Heroku. The application uses CPU-based TensorFlow inference and does not require a GPU.
+During testing, a PyArrow/NumPy compatibility issue was resolved by pinning pyarrow==17.0.0. This version was selected to maintain compatibility with the project's NumPy environment. The application uses CPU-based TensorFlow inference and does not require a GPU.
 
 ## Bugs, Issues and Resolutions
 
@@ -520,7 +533,7 @@ The project was developed using the Code Institute machine-learning project fram
 
 ### Documentation and Development Resources
 
-Documentation for Python, TensorFlow, Keras, Streamlit, NumPy, Pandas, Matplotlib, Seaborn, Pillow and Scikit-learn supported development. Add specific links for any tutorials, repositories or external code actually used.
+Documentation for Python, TensorFlow, Keras, Streamlit, NumPy, Pandas, Matplotlib, Seaborn, Pillow and Scikit-learn supported development.
 
 ### AI Assistance
 
